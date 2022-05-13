@@ -23,7 +23,7 @@ func (u *user) GetTag() string {
 }
 
 func (u *user) GetHost() string {
-	return "org.lowcode.svc.cluster.local"
+	return "org"
 }
 
 func (u *user) GetProfile(ctx context.Context, req *lu.GetProfileReq) (*lu.GetProfileResp, error) {

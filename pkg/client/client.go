@@ -21,6 +21,7 @@ type Client interface {
 var (
 	timeout      time.Duration = time.Duration(getEnvToInt64WithDefatult("LOWCODE_CLIENT_TIMEOUT", 20)) * time.Second
 	maxIdleConns int           = int(getEnvToInt64WithDefatult("LOWCODE_CLIENT_MAX_IDLE_CONNS", 10))
+	hostSuffix   string        = getEnv("LOWCODE_NAMESPACE")
 )
 
 func New() (Client, error) {
@@ -92,9 +93,14 @@ func WithGET(svc service.Service, uri string, params interface{}) Option {
 	return func(c Client) error {
 		values := normalizeParams(params)
 
+		host := svc.GetHost()
+		if hostSuffix != "" {
+			host += hostSuffix
+		}
+
 		url := url.URL{
 			Scheme:   "http",
-			Host:     svc.GetHost(),
+			Host:     host,
 			Path:     uri,
 			RawQuery: values.Encode(),
 		}

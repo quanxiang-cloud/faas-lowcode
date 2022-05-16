@@ -1,16 +1,16 @@
-package client
+package pkg
 
 import (
 	"os"
 	"strconv"
 )
 
-func getEnv(key string) string {
+func GetEnv(key string) string {
 	return os.Getenv(key)
 }
 
-func getEnvWithDefault(key, s string) string {
-	env := getEnv(key)
+func GetEnvWithDefault(key, s string) string {
+	env := GetEnv(key)
 	if env == "" {
 		env = s
 	}
@@ -18,7 +18,7 @@ func getEnvWithDefault(key, s string) string {
 	return env
 }
 
-func getEnvToInt64(key string) int64 {
+func GetEnvToInt64(key string) int64 {
 	env := os.Getenv(key)
 	i, err := strconv.ParseInt(env, 10, 64)
 	if err != nil {
@@ -28,8 +28,8 @@ func getEnvToInt64(key string) int64 {
 	return i
 }
 
-func getEnvToInt64WithDefatult(key string, si int64) int64 {
-	i := getEnvToInt64(key)
+func GetEnvToInt64WithDefatult(key string, si int64) int64 {
+	i := GetEnvToInt64(key)
 	if i == 0 {
 		i = si
 	}

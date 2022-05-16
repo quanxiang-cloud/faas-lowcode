@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/quanxiang-cloud/faas-lowcode/pkg"
 	"github.com/quanxiang-cloud/faas-lowcode/pkg/service"
 	"k8s.io/klog/v2"
 )
@@ -19,9 +20,9 @@ type Client interface {
 }
 
 var (
-	timeout      time.Duration = time.Duration(getEnvToInt64WithDefatult("LOWCODE_CLIENT_TIMEOUT", 20)) * time.Second
-	maxIdleConns int           = int(getEnvToInt64WithDefatult("LOWCODE_CLIENT_MAX_IDLE_CONNS", 10))
-	hostSuffix   string        = getEnv("LOWCODE_NAMESPACE")
+	timeout      time.Duration = time.Duration(pkg.GetEnvToInt64WithDefatult("LOWCODE_CLIENT_TIMEOUT", 20)) * time.Second
+	maxIdleConns int           = int(pkg.GetEnvToInt64WithDefatult("LOWCODE_CLIENT_MAX_IDLE_CONNS", 10))
+	hostSuffix   string        = pkg.GetEnv("LOWCODE_NAMESPACE")
 )
 
 func New() (Client, error) {

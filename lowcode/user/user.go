@@ -23,7 +23,7 @@ func (u *user) GetTag() string {
 }
 
 func (u *user) GetHost() string {
-	return "org"
+	return "org.inner"
 }
 
 func (u *user) GetProfile(ctx context.Context, req *lu.GetProfileReq) (*lu.GetProfileResp, error) {

@@ -33,9 +33,14 @@ func genFingerprint(ctx context.Context) string {
 		key = []byte(strconv.Itoa(rand.Intn(math.MaxInt32)))
 	})
 
-	val := ctx.Value("User-Id").(string)
+	var userID string
+	val := ctx.Value("User-Id")
+	if val != nil {
+		userID = ctx.Value("User-Id").(string)
+	}
+
 	hash := md5.New()
-	hash.Write([]byte(val))
+	hash.Write([]byte(userID))
 
 	return hex.EncodeToString(hash.Sum(key))
 }

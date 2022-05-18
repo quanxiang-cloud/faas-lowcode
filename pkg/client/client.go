@@ -1,7 +1,9 @@
 package client
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"io"
 	"net"
@@ -89,7 +91,9 @@ func (c *httpClient) Do(ctx context.Context, opts ...Option) (Result, error) {
 		}
 	}
 
-	client.request.WithContext(ctx)
+	client.request = client.request.WithContext(ctx)
+
+	setHeader(client.request, ctx)
 
 	response, err := client.c.Do(client.request)
 	if err != nil {
@@ -108,20 +112,19 @@ type Option func(Client) error
 func WithGET(svc service.Service, uri string, params interface{}) Option {
 	return func(c Client) error {
 		values := normalizeParams(params)
-
 		host := svc.GetHost()
 		if hostSuffix != "" {
 			host += hostSuffix
 		}
-
 		url := url.URL{
-			Scheme:   "http",
-			Host:     host,
-			Path:     uri,
-			RawQuery: values.Encode(),
+			Scheme: "http",
+			Host:   host,
+			Path:   uri,
 		}
-
-		request, err := http.NewRequest("GET", url.String(), nil)
+		if values != nil {
+			url.RawQuery = values.Encode()
+		}
+		request, err := http.NewRequest(http.MethodGet, url.String(), nil)
 		if err != nil {
 			return err
 		}
@@ -130,23 +133,117 @@ func WithGET(svc service.Service, uri string, params interface{}) Option {
 
 		return nil
 	}
+}
 
+// WithDelete http delete method
+func WithDelete(svc service.Service, uri string, params interface{}) Option {
+	return func(c Client) error {
+		values := normalizeParams(params)
+		host := svc.GetHost()
+		if hostSuffix != "" {
+			host += hostSuffix
+		}
+		url := url.URL{
+			Scheme: "http",
+			Host:   host,
+			Path:   uri,
+		}
+		if values != nil {
+			url.RawQuery = values.Encode()
+		}
+		request, err := http.NewRequest(http.MethodDelete, url.String(), nil)
+		if err != nil {
+			return err
+		}
+		c.(*httpClient).SetRequest(request)
+		return nil
+	}
+}
+
+// WithPut http put method
+func WithPut(svc service.Service, uri string, params interface{}) Option {
+	return func(c Client) error {
+		reader, err := bodyParams(params)
+		if err != nil {
+			return err
+		}
+		host := svc.GetHost()
+		if hostSuffix != "" {
+			host += hostSuffix
+		}
+		url := url.URL{
+			Scheme: "http",
+			Host:   host,
+			Path:   uri,
+		}
+		request, err := http.NewRequest(http.MethodPut, url.String(), reader)
+		if err != nil {
+			return err
+		}
+		c.(*httpClient).SetRequest(request)
+		return nil
+	}
+}
+
+// WithPost http put method
+func WithPost(svc service.Service, uri string, params interface{}) Option {
+	return func(c Client) error {
+		reader, err := bodyParams(params)
+		if err != nil {
+			return err
+		}
+		host := svc.GetHost()
+		if hostSuffix != "" {
+			host += hostSuffix
+		}
+		url := url.URL{
+			Scheme: "http",
+			Host:   host,
+			Path:   uri,
+		}
+		request, err := http.NewRequest(http.MethodPost, url.String(), reader)
+		if err != nil {
+			return err
+		}
+		c.(*httpClient).SetRequest(request)
+		return nil
+	}
 }
 
 func normalizeParams(params interface{}) url.Values {
+	if params == nil {
+		return nil
+	}
 	if values, ok := params.(map[string][]string); ok {
 		return values
 	}
 
 	values := url.Values{}
 	switch kind := reflect.TypeOf(params).Kind(); kind {
+	// TODO
 	case reflect.Struct:
-		// TODO
+	// TODO
 	case reflect.Map:
-		// TODO
+
 	default:
 		klog.Error("unsupported parameter type, [%v]", kind)
 	}
 
 	return values
+}
+
+func bodyParams(params interface{}) (*bytes.Reader, error) {
+	paramByte, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+	return bytes.NewReader(paramByte), nil
+}
+
+func setHeader(req *http.Request, ctx context.Context) {
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add(GetRequestIDKV(ctx).Wreck())
+	req.Header.Add(GetTimezone(ctx).Wreck())
+	req.Header.Add(GetTenantID(ctx).Wreck())
+	req.Header.Add(GetUserID(ctx).Wreck())
 }

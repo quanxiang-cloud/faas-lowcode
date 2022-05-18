@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -19,10 +20,20 @@ type Client interface {
 	Do(ctx context.Context, opts ...Option) (Result, error)
 }
 
+const (
+	safe   = 0
+	unsafe = 1
+)
+
 var (
 	timeout      time.Duration = time.Duration(pkg.GetEnvToInt64WithDefatult("LOWCODE_CLIENT_TIMEOUT", 20)) * time.Second
 	maxIdleConns int           = int(pkg.GetEnvToInt64WithDefatult("LOWCODE_CLIENT_MAX_IDLE_CONNS", 10))
 	hostSuffix   string        = pkg.GetEnv("LOWCODE_NAMESPACE")
+	safeUser     int64         = pkg.GetEnvToInt64WithDefatult("LOWCODE_USER_SAFE", safe)
+)
+
+var (
+	ErrChangeUserForbidden = errors.New("Illegal modification of user attributes")
 )
 
 func New() (Client, error) {
@@ -66,6 +77,10 @@ func (c *httpClient) SetRequest(request *http.Request) {
 }
 
 func (c *httpClient) Do(ctx context.Context, opts ...Option) (Result, error) {
+	if safeUser == safe && !isAllowedThrough(ctx) {
+		return nil, ErrChangeUserForbidden
+	}
+
 	client := c.clone()
 
 	for _, opt := range opts {

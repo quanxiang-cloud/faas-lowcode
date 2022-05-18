@@ -7,5 +7,6 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/google/uuid v1.3.0
 	github.com/quanxiang-cloud/faas-lowcode-interface v0.0.0-20220505034554-fae42a4892ad
+	github.com/stretchr/testify v1.7.0 // indirect
 	k8s.io/klog/v2 v2.60.1
 )

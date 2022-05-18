@@ -27,8 +27,9 @@ func WithFingerprint(ctx context.Context) context.Context {
 	return context.WithValue(ctx, fingerprintKey, genFingerprint(ctx))
 }
 
+var once = sync.Once{}
+
 func genFingerprint(ctx context.Context) string {
-	once := sync.Once{}
 	once.Do(func() {
 		key = []byte(strconv.Itoa(rand.Intn(math.MaxInt32)))
 	})

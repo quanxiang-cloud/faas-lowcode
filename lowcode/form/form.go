@@ -84,7 +84,7 @@ func (f *form) GetTag() string {
 }
 
 func (f *form) GetHost() string {
-	return "127.0.0.1:40001"
+	return "form"
 }
 
 func (f *form) ListForm(ctx context.Context, req *lf.ListReq) (*lf.ListResp, error) {

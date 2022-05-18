@@ -961,8 +961,8 @@ github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1
 github.com/prometheus/statsd_exporter v0.21.0/go.mod h1:rbT83sZq2V+p73lHhPZfMc3MLCHmSHelCh9hSGYNLTQ=
 github.com/prometheus/statsd_exporter v0.22.3/go.mod h1:N4Z1+iSqc9rnxlT1N8Qn3l65Vzb5t4Uq0jpg8nxyhio=
 github.com/prometheus/tsdb v0.7.1/go.mod h1:qhTCs0VvXwvX/y3TZrWD7rabWM+ijKTux40TwIPHuXU=
-github.com/quanxiang-cloud/faas-lowcode-interface v0.0.0-20220505034554-fae42a4892ad h1:ynmSpZkZf8oGV6EhEXfiQY5Wy9lrTJxBw/g6WH8KlZw=
-github.com/quanxiang-cloud/faas-lowcode-interface v0.0.0-20220505034554-fae42a4892ad/go.mod h1:rwhMXhcV96F1l+frwbgqazzepMTwRC1f0HaFEPNHscQ=
+github.com/quanxiang-cloud/faas-lowcode-interface v0.0.0-20220518101852-2f25f283143e h1:jufa1ISSHuR308KWLuDMCXkUTBT6XGsqMfOoSuaLPy0=
+github.com/quanxiang-cloud/faas-lowcode-interface v0.0.0-20220518101852-2f25f283143e/go.mod h1:rwhMXhcV96F1l+frwbgqazzepMTwRC1f0HaFEPNHscQ=
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/robfig/cron/v3 v3.0.1/go.mod h1:eQICP3HwyT7UooqI/z+Ov+PtYAWygg1TEWWzGIFLtro=
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=

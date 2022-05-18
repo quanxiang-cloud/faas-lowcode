@@ -30,7 +30,7 @@ func WithFingerprint(ctx context.Context) context.Context {
 func genFingerprint(ctx context.Context) string {
 	once := sync.Once{}
 	once.Do(func() {
-		key = []byte(strconv.Itoa(rand.Intn(math.MaxInt)))
+		key = []byte(strconv.Itoa(rand.Intn(math.MaxInt32)))
 	})
 
 	val := ctx.Value("User-Id").(string)
